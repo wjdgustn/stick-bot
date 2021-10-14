@@ -3,7 +3,7 @@
 module.exports = async interaction => {
     await interaction.reply('DM 전송 작업을 시작합니다.');
 
-    const content = interaction.options.getString('content');
+    const content = interaction.options.getString('content').split('///').join('\n');
 
     const sent = [];
     const success = [];
