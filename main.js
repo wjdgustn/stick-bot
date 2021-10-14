@@ -117,16 +117,16 @@ const registerCommands = async () => {
     else {
         console.log('registering global command...');
         await client.application.commands.set(commands);
-        console.log('registered global command. registering guild command...');
+        console.log('registered global command.');
 
-        const guildCommandInfo = await client.guilds.cache.get(process.argv[3]).commands.set(privateCommands);
-        console.log('registered guild command. registering guild command permission...');
-        for (let c of guildCommandInfo) {
-            if (permissions[c[1].name] != null) await c[1].permissions.set({
-                permissions: permissions[c[1].name]
-            });
-        }
-        console.log('registered guild command permission.');
+        // const guildCommandInfo = await client.guilds.cache.get(process.argv[3]).commands.set(privateCommands);
+        // console.log('registered guild command. registering guild command permission...');
+        // for (let c of guildCommandInfo) {
+        //     if (permissions[c[1].name] != null) await c[1].permissions.set({
+        //         permissions: permissions[c[1].name]
+        //     });
+        // }
+        // console.log('registered guild command permission.');
     }
 }
 
