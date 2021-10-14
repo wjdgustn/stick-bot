@@ -1,0 +1,25 @@
+{
+  "name": "stick-bot",
+  "version": "1.0.0",
+  "description": "Stick message bot.",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js",
+    "test": "nodemon main.js --debug 897644059269664779"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wjdgustn/stick-bot.git"
+  },
+  "author": "HYONSU",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/wjdgustn/stick-bot/issues"
+  },
+  "homepage": "https://github.com/wjdgustn/stick-bot#readme",
+  "dependencies": {
+    "discord.js": "^13.1.0",
+    "dokdo": "^0.5.1",
+    "mongoose": "^6.0.3"
+  }
+}
