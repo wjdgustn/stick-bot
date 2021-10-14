@@ -9,9 +9,7 @@ const Stick = require('./schemas/stick');
 const client = new Client({
     intents: [
         Intents.FLAGS.GUILDS,
-        Intents.FLAGS.GUILD_MESSAGES,
-        Intents.FLAGS.GUILD_MEMBERS,
-        Intents.FLAGS.DIRECT_MESSAGES
+        Intents.FLAGS.GUILD_MESSAGES
     ],
     partials: [
         'GUILD_MEMBER',
