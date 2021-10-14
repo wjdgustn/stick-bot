@@ -11,7 +11,7 @@ module.exports = async interaction => {
 
    await Stick.create({
        channel: interaction.channel.id,
-       message: options.getString('message').split('//').join('\n'),
+       message: options.getString('message').split('///').join('\n'),
        type: 'message',
        cooldown: cooldown !== null ? cooldown * 1000 : 0
    });

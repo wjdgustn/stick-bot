@@ -18,8 +18,8 @@ module.exports = async interaction => {
 
    await Stick.create({
        channel: interaction.channel.id,
-       title: options.getString('title').split('//').join('\n'),
-       description: options.getString('description')?.split('//').join('\n'),
+       title: options.getString('title').split('///').join('\n'),
+       description: options.getString('description')?.split('///').join('\n'),
        color: color || '#349eeb',
        image: options.getString('image'),
        type: 'embed',
