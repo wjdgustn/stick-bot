@@ -36,6 +36,19 @@ module.exports = {
                         type: 'SUB_COMMAND'
                     }
                 ]
+            },
+            {
+                name: 'dmnotice',
+                description: '모든 서버 소유자 DM으로 공지를 전송합니다.',
+                type: 'SUB_COMMAND',
+                options: [
+                    {
+                        name: 'content',
+                        description: '전송할 내용입니다.',
+                        type: 'STRING',
+                        required: true
+                    }
+                ]
             }
         ]
     },
