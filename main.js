@@ -140,6 +140,15 @@ client.once('ready', async () => {
     loadDokdo();
     loadCommands();
     registerCommands();
+
+    let activityIndex = 0;
+    setInterval(async () => {
+        await client.user.setActivity(setting.ACTIVITIES[activityIndex]
+            .replace('{servercount}', client.guilds.cache.size.toString())
+        );
+        activityIndex++;
+        if(activityIndex >= setting.ACTIVITIES.length) activityIndex = 0;
+    }, setting.ACTIVITY_CHANGE_INTERVAL);
 });
 
 client.on('interactionCreate', async interaction => {
