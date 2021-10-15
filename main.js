@@ -141,15 +141,7 @@ client.once('ready', async () => {
     loadCommands();
     registerCommands();
 
-    let activityIndex = 0;
-    setInterval(async () => {
-        await client.user.setActivity(setting.ACTIVITIES[activityIndex]
-            .replace('{servercount}', client.guilds.cache.size.toString())
-        );
-        activityIndex++;
-        if(activityIndex >= setting.ACTIVITIES.length) activityIndex = 0;
-    }, setting.ACTIVITY_CHANGE_INTERVAL);
-});
+
 
 client.on('interactionCreate', async interaction => {
     if(interaction.isCommand() || interaction.isContextMenu()) {
@@ -159,6 +151,16 @@ client.on('interactionCreate', async interaction => {
 
         if(commandHandler[interaction.commandName] != null) commandHandler[interaction.commandName](interaction);
     }
+});
+    
+    let activityIndex = 0;
+    setInterval(async () => {
+        await client.user.setActivity(setting.ACTIVITIES[activityIndex]
+            .replace('{servercount}', client.guilds.cache.size.toString())
+        );
+        activityIndex++;
+        if(activityIndex >= setting.ACTIVITIES.length) activityIndex = 0;
+    }, setting.ACTIVITY_CHANGE_INTERVAL);
 });
 
 client.on('messageCreate', message => {
