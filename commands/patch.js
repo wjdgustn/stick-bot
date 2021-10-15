@@ -5,7 +5,7 @@ module.exports = {
     },
     handler: async interaction => {
         return interaction.reply({
-            content: 'https://docs.google.com/document/d/1eF7eRCoFbkDGTpRbx-ZvsAWTatkRsIfXJVKmqRCi_eI/edit?usp=sharing',
+            content: `https://docs.google.com/document/d/1eF7eRCoFbkDGTpRbx-ZvsAWTatkRsIfXJVKmqRCi_eI/edit?usp=sharing`,
             ephemeral: true
         });
     }
