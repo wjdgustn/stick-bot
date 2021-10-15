@@ -12,7 +12,7 @@ module.exports = {
                 options: [
                     {
                         name: 'message',
-                        description: '접착 메시지로 설정할 메시지입니다. ///로 줄바꿈이 가능합니다. / message to set as an stick message. use three slashes(///) to change the line. ',
+                        description: '접착 메시지로 설정할 메시지, ///로 줄바꿈 가능합니다. / message for to stick. use /// to change the line.',
                         type: 'STRING',
                         required: true
                     },
