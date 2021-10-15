@@ -164,7 +164,7 @@ client.on('interactionCreate', async interaction => {
 });
 
 client.on('messageCreate', message => {
-    if(message.author.bot) return;
+    if(message.author.id === client.user.id) return;
 
     StickMessageHandler(message);
 
