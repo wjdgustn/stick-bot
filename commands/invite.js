@@ -1,7 +1,7 @@
 module.exports = {
     info: {
-        name: 'patch',
-        description: `패치노트를 확인합니다. / Check Bot's patch note`,
+        name: 'invite',
+        description: `봇 초대 링크를 확인합니다. / Check bot's invite Link.`,
     },
     handler: async interaction => {
         return interaction.reply({
