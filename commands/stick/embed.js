@@ -146,7 +146,10 @@ module.exports = async interaction => {
 
         await msg.delete();
 
-        if(!applied) return interaction.followUp('고정 메시지 설정이 취소되었습니다.\nStick message setting cancelled.');
+        if(!applied) return interaction.followUp({
+            content: '고정 메시지 설정이 취소되었습니다.\nStick message setting cancelled.',
+            ephemeral: true
+        });
         else {
             await Stick.deleteMany({
                 channel: interaction.channel.id
