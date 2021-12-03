@@ -130,7 +130,9 @@ module.exports = async interaction => {
         }
 
         await msg.delete();
-        return responseMsg.delete();
+        try {
+            await responseMsg.delete();
+        } catch(e) {}
     });
 
     collector.on('end', async () => {
