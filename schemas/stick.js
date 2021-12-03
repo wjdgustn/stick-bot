@@ -33,6 +33,14 @@ const newSchema = new Schema({
     },
     lastMessage: {
         type: String
+    },
+    embed: {
+        type: JSON
+    },
+    newEmbed: {
+        type: Boolean,
+        required: true,
+        default: false
     }
 });
 

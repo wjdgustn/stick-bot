@@ -13,28 +13,28 @@ module.exports = async interaction => {
 
     const embedOptions = [
         {
-            label: '제목 / Title',
-            description: '임베드의 제목입니다. / Embed\'s title.',
+            label: '제목 // Title',
+            description: '임베드의 제목입니다. // Embed\'s title.',
             value: 'title'
         },
         {
-            label: '설명 / Description',
-            description: '임베드의 설명입니다. / Embed\'s description.',
+            label: '설명 // Description',
+            description: '임베드의 설명입니다. // Embed\'s description.',
             value: 'description'
         },
         {
-            label: '색 / Color',
-            description: '임베드의 색상입니다. / Embed\'s color.',
+            label: '색 // Color',
+            description: '임베드의 색상입니다. // Embed\'s color.',
             value: 'color'
         },
         {
             label: 'URL',
-            description: '임베드의 제목 URL입니다. / Embed\'s URL for title.',
+            description: '임베드의 URL입니다. 제목을 클릭하면 여기 설정된 링크로 이동합니다. // Embed\'s URL. If you click on the title, you will go to the link set here.',
             value: 'url'
         },
         {
-            label: '이미지 / Image',
-            description: '임베드에 넣을 이미지입니다. / Embed\'s image.',
+            label: '이미지 // Image',
+            description: '임베드에 넣을 이미지입니다. // Embed\'s image.',
             value: 'image'
         }
     ];
@@ -48,18 +48,18 @@ module.exports = async interaction => {
                 .addComponents(
                     new MessageSelectMenu()
                         .setCustomId('select')
-                        .setPlaceholder('수정할 항목을 선택하세요. / Please select the item you want to modify.')
+                        .setPlaceholder('수정할 항목을 선택하세요. // Please select the item you want to modify.')
                         .addOptions(embedOptions)
                 ),
             new MessageActionRow()
                 .addComponents(
                     new MessageButton()
                         .setCustomId('apply')
-                        .setLabel('완료 / Done')
+                        .setLabel('완료 // Done')
                         .setStyle('SUCCESS'),
                     new MessageButton()
                         .setCustomId('cancel')
-                        .setLabel('취소 / Cancel')
+                        .setLabel('취소 // Cancel')
                         .setStyle('DANGER')
                 )
         ]
@@ -90,10 +90,10 @@ module.exports = async interaction => {
         collector.resetTimer();
         const fieldName = i.values[0];
 
-        const fieldLabel = embedOptions.find(a => a.value === fieldName).label.split('/');
+        const fieldLabel = embedOptions.find(a => a.value === fieldName).label.split('//');
         const msg = await i.reply({
             fetchReply: true,
-            content: `${fieldLabel[0].trim()}${utils.checkBatchim(fieldLabel[0].trim()) ? '을' : '를'} 입력해주세요.\nInput ${(fieldLabel[1] || fieldLabel[0]).trim()}.`,
+            content: `${fieldLabel[0].trim()}${utils.checkBatchim(fieldLabel[0].trim()) ? '을' : '를'} 입력해주세요.\nInput ${fieldLabel[1].trim()}.`,
         });
 
         let response = await interaction.channel.awaitMessages({
@@ -134,36 +134,31 @@ module.exports = async interaction => {
     });
 
     collector.on('end', async () => {
-        // msg.components[0].components[0].setDisabled();
-        // msg.components[1].components[0].setDisabled();
-        // msg.components[1].components[1].setDisabled();
-        //
-        // await interaction.editReply({
-        //     components: msg.components
-        // });
+        msg.components[0].components[0].setDisabled();
+        msg.components[1].components[0].setDisabled();
+        msg.components[1].components[1].setDisabled();
 
-        await msg.delete();
+        await interaction.editReply({
+            components: msg.components
+        });
 
         if(!applied) return interaction.followUp('고정 메시지 설정이 취소되었습니다.\nStick message setting cancelled.');
-        else {
-            await Stick.deleteMany({
-                channel: interaction.channel.id
-            });
+    });
 
-            const cooldown = options.getNumber('cooldown');
+   await Stick.deleteMany({
+       channel: interaction.channel.id
+   });
 
-            await Stick.create({
-                channel: interaction.channel.id,
-                type: 'embed',
-                cooldown: cooldown !== null ? cooldown * 1000 : 0,
-                newEmbed: true,
-                embed
-            });
+   const cooldown = options.getNumber('cooldown');
 
-            return interaction.followUp({
-                content: '이 채널의 고정 임베드를 설정하였습니다.',
-                ephemeral: true
-            });
-        }
+   await Stick.create({
+       type: 'embed',
+       newEmbed: true,
+       cooldown: cooldown !== null ? cooldown * 1000 : 0
+   });
+
+    return interaction.followUp({
+        content: '이 채널의 고정 임베드를 설정하였습니다.',
+        ephemeral: true
     });
 }

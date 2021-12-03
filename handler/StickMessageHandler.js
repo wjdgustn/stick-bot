@@ -29,7 +29,10 @@ module.exports = async message => {
                 msg = stick.message;
                 break;
             case 'embed':
-                msg = {
+                if(stick.newEmbed) msg = {
+                    embeds: [stick.embed]
+                }
+                else msg = {
                     embeds: [
                         {
                             title: stick.title,
@@ -56,8 +59,8 @@ module.exports = async message => {
             });
         } catch (e) {}
 
-        if(stick.cooldown == 0) delete running[message.channel.id];
+        if(stick.cooldown === 0) delete running[message.channel.id];
     }, stick.cooldown);
 
-    if(stick.cooldown != 0) delete running[message.channel.id];
+    if(stick.cooldown !== 0) delete running[message.channel.id];
 }
