@@ -1,6 +1,6 @@
 module.exports = {
     info: {
-        name: 'suport',
+        name: 'support',
         description: `지원 서버 링크를 확인합니다. / Check bot's Support server Link.`,
     },
     handler: async interaction => {
