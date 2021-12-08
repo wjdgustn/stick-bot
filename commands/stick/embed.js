@@ -166,7 +166,7 @@ module.exports = async interaction => {
             });
 
             return interaction.followUp({
-                content: '이 채널의 고정 임베드를 설정하였습니다.',
+                content: '이 채널의 고정 임베드를 설정하였습니다.\Embed Stick message has been set.',
                 ephemeral: true
             });
         }
