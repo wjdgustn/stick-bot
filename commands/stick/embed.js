@@ -8,7 +8,7 @@ module.exports = async interaction => {
     const { options } = interaction;
 
     const embed = {
-        title: '제목'
+        title: '제목 / Title'
     }
 
     const embedOptions = [
