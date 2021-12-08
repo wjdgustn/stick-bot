@@ -1,0 +1,12 @@
+module.exports = {
+    info: {
+        name: 'help',
+        description: `view FAQ and simple bot's descriptions`,
+    },
+    handler: async interaction => {
+        return interaction.reply({
+            content: `(KOR / ENG) Link : https://majestic-sloth-7bf.notion.site/Discord-Dashboard-Bot-Help-FAQ-678b515aca1e47608197978799e86575`,
+            ephemeral: true
+        });
+    }
+};
