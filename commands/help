@@ -1,7 +1,7 @@
 module.exports = {
     info: {
         name: 'help',
-        description: `view FAQ and simple bot's descriptions`,
+        description: `FAQ를 확인합니다. / Check bot's FAQ`,
     },
     handler: async interaction => {
         return interaction.reply({
