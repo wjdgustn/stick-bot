@@ -17,7 +17,7 @@ module.exports = async interaction => {
    });
 
     return interaction.reply({
-        content: '이 채널의 고정 메시지를 설정하였습니다.',
+        content: '이 채널의 고정 메시지를 설정하였습니다.\n Stick message has been set. ',
         ephemeral: true
     });
 }
