@@ -5,7 +5,7 @@ module.exports = {
     },
     handler: async interaction => {
         return interaction.reply({
-            content: `(KOR / ENG) Link : https://majestic-sloth-7bf.notion.site/Discord-Dashboard-Bot-Help-FAQ-678b515aca1e47608197978799e86575`,
+            content: `(KOR / ENG) Link : https://majestic-sloth-7bf.notion.site/Discord-Dashboard-Bot-Help-FAQ-678b515aca1e47608197978799e86575\n\n 봇 소유자 / Bot owner : Rhythmfactory#4091`,
             ephemeral: true
         });
     }
