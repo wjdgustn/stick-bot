@@ -7,7 +7,11 @@ const Stick = require('../../schemas/stick');
 module.exports = async interaction => {
     const { options } = interaction;
 
-    const embed = {
+    const checkBeforeStick = await Stick.findOne({
+        channel: interaction.channel.id
+    });
+
+    const embed = checkBeforeStick && checkBeforeStick.embed ? checkBeforeStick.embed : {
         title: '제목 / Title'
     }
 
