@@ -1,6 +1,8 @@
 {
   "TOKEN": "token",
 
+  "OWNERS": [],
+
   "ACTIVITY_CHANGE_INTERVAL": 10000,
   "ACTIVITIES": [
     "와 샌즈",
