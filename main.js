@@ -57,14 +57,14 @@ const loadOwners = async () => {
     ownerID = owners.map(a => a.id);
     teamOwner = application.owner instanceof Team ? application.owner.ownerId : application.owner.id;
 
-    owners.push(...setting.OWNERS);
+    ownerID.push(...setting.OWNERS);
 }
 
 const loadDokdo = () => {
     DokdoHandler = new Dokdo(client, {
         aliases: [ 'dokdo', 'dok' ],
-        prefix: ';',
-        owners: owners,
+        prefix: '?',
+        owners: ownerID,
         secrets: [
             setting.MONGODB_HOST,
             setting.MONGODB_PORT,
