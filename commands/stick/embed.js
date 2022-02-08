@@ -106,7 +106,13 @@ module.exports = async interaction => {
             max: 1
         });
         doingEdit = false;
-        if(!response.first()) return interaction.followUp('시간이 초과되었습니다.\nTime out.');
+        if(!response.first()) {
+            await msg.delete();
+            return interaction.followUp({
+                content: '시간이 초과되었습니다.\nTime out.',
+                ephemeral: true
+            });
+        }
         const responseMsg = response.first();
         response = response.first().content;
 
