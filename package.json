@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "node main.js",
-    "test": "nodemon main.js --debug"
+    "test": "npx nodemon main.js --debug"
   },
   "repository": {
     "type": "git",
@@ -21,5 +21,8 @@
     "discord.js": "^13.1.0",
     "dokdo": "^0.5.1",
     "mongoose": "^6.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
   }
 }
