@@ -40,6 +40,16 @@ module.exports = async interaction => {
             label: '이미지 / Image',
             description: '임베드에 넣을 이미지입니다. / Embed\'s image.',
             value: 'image'
+        },
+        {
+            label: '썸네일 / Thumbnail',
+            description: '임베드에 넣을 썸네일입니다. / Embed\'s thumbnail.',
+            value: 'thumbnail'
+        },
+        {
+            label: '푸터 / Footer',
+            description: '임베드에 넣을 푸터입니다. / Embed\'s footer.',
+            value: 'footer'
         }
     ];
 
@@ -118,8 +128,14 @@ module.exports = async interaction => {
 
         const valueBackup = embed[fieldName];
 
-        if(fieldName === 'image') embed[fieldName] = {
+        if([
+            'image',
+            'thumbnail'
+        ].includes(fieldName)) embed[fieldName] = {
             url: response
+        };
+        else if(fieldName === 'footer') embed[fieldName] = {
+            text: response
         };
         else embed[fieldName] = response;
 
