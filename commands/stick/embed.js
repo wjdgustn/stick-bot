@@ -107,7 +107,7 @@ module.exports = async interaction => {
         const fieldLabel = embedOptions.find(a => a.value === fieldName).label.split('/');
         const msg = await i.reply({
             fetchReply: true,
-            content: `${fieldLabel[0].trim()}${utils.checkBatchim(fieldLabel[0].trim()) ? '을' : '를'} 입력해주세요.\nInput ${(fieldLabel[1] || fieldLabel[0]).trim()}.${embed[fieldName] ? `\n\n현재 값(Current Value)\n\`\`\`\n${Util.escapeMarkdown(embed[fieldName]).substring(0, 1024)}\`\`\`` : ''}`,
+            content: `${fieldLabel[0].trim()}${utils.checkBatchim(fieldLabel[0].trim()) ? '을' : '를'} 입력해주세요.\nInput ${(fieldLabel[1] || fieldLabel[0]).trim()}.${embed[fieldName] ? `\n\n현재 값(Current Value)\n\`\`\`\n${Util.escapeCodeBlock(embed[fieldName]).substring(0, 1024)}\`\`\`` : ''}`,
         });
 
         let response = await interaction.channel.awaitMessages({
