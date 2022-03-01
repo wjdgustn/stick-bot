@@ -1,4 +1,4 @@
-const { MessageActionRow , MessageButton , MessageSelectMenu } = require('discord.js');
+const { MessageActionRow , MessageButton , MessageSelectMenu , Util } = require('discord.js');
 
 const utils = require('../../utils');
 
@@ -107,7 +107,7 @@ module.exports = async interaction => {
         const fieldLabel = embedOptions.find(a => a.value === fieldName).label.split('/');
         const msg = await i.reply({
             fetchReply: true,
-            content: `${fieldLabel[0].trim()}${utils.checkBatchim(fieldLabel[0].trim()) ? '을' : '를'} 입력해주세요.\nInput ${(fieldLabel[1] || fieldLabel[0]).trim()}.`,
+            content: `${fieldLabel[0].trim()}${utils.checkBatchim(fieldLabel[0].trim()) ? '을' : '를'} 입력해주세요.\nInput ${(fieldLabel[1] || fieldLabel[0]).trim()}.${embed[fieldName] ? `\n\n현재 값(Current Value)\n\`\`\`\n${Util.escapeMarkdown(embed[fieldName]).substring(0, 1024)}\`\`\`` : ''}`,
         });
 
         let response = await interaction.channel.awaitMessages({
