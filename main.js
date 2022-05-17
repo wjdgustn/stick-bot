@@ -105,13 +105,13 @@ const loadCommands = () => {
 const registerCommands = async () => {
     if(debug) {
         console.log('registering debug guild command...');
-        const guildCommandInfo = await client.guilds.cache.get(process.argv[3]).commands.set(allCommands);
+        await client.guilds.cache.get(process.argv[3]).commands.set(allCommands);
         console.log('registered debug guild command. registering debug guild command permission...');
-        for(let c of guildCommandInfo) {
-            if(permissions[c[1].name] != null) await c[1].permissions.set({
-                permissions: permissions[c[1].name]
-            });
-        }
+        // for(let c of guildCommandInfo) {
+        //     if(permissions[c[1].name] != null) await c[1].permissions.set({
+        //         permissions: permissions[c[1].name]
+        //     });
+        // }
         console.log('registered debug guild command permission.');
     }
     else {
