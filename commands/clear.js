@@ -1,4 +1,4 @@
-const { ApplicationCommandOptionType: Options } = require('discord.js');
+const { ApplicationCommandOptionType: Options, PermissionsBitField } = require('discord.js');
 
 module.exports = {
     info: {
@@ -14,7 +14,7 @@ module.exports = {
         ]
     },
     handler: async interaction => {
-        if(!interaction.channel.permissionsFor(interaction.member).has('MANAGE_MESSAGES')) return interaction.reply({
+        if(!interaction.channel.permissionsFor(interaction.member).has(PermissionsBitField.Flags.ManageMessages)) return interaction.reply({
             content: '이 채널에서 "메시지 관리" 권한을 가지고 있어야 합니다.',
             ephemeral: true
         });
