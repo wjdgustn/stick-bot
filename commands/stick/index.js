@@ -1,3 +1,4 @@
+const { ApplicationCommandOptionType: Options } = require('discord.js');
 const fs = require('fs');
 
 module.exports = {
@@ -8,37 +9,37 @@ module.exports = {
             {
                 name: 'message',
                 description: '메시지를 이 채널의 접착 메시지로 설정합니다. / Sets the message to the stick message of this channel.',
-                type: 'SUB_COMMAND',
+                type: Options.Subcommand,
                 options: [
                     {
                         name: 'message',
                         description: '접착 메시지로 설정할 메시지, ///로 줄바꿈 가능합니다. / message for to stick. use /// to change the line.',
-                        type: 'STRING',
+                        type: Options.String,
                         required: true
                     },
                     {
                         name: 'cooldown',
                         description: '몇초간 메시지가 오지 않았을 때 메시지를 다시 작성할지 설정합니다. / Set cooldown',
-                        type: 'NUMBER'
+                        type: Options.Number
                     }
                 ]
             },
             {
                 name: 'embed',
                 description: '임베드를 이 채널의 접착 메시지로 설정합니다. / Set embed message to the stick massage of this channel',
-                type: 'SUB_COMMAND',
+                type: Options.Subcommand,
                 options: [
                     {
                         name: 'cooldown',
                         description: '몇초간 메시지가 오지 않았을 때 메시지를 다시 작성할지 설정합니다. / set cooldown',
-                        type: 'NUMBER'
+                        type: Options.Number
                     }
                 ]
             },
             {
                 name: 'delete',
                 description: '이 채널의 접착 메시지를 삭제합니다. / remove stick message',
-                type: 'SUB_COMMAND'
+                type: Options.Subcommand
             }
         ]
     },

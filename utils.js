@@ -5,7 +5,7 @@ const escapeRegExp = s => s.toString().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 module.exports.escapeRegExp = escapeRegExp;
 
 module.exports.checkBatchim = word => {
-    if (typeof word !== 'string') return null;
+    if (typeof word !== Options.String) return null;
 
     let lastLetter = word[word.length - 1];
 
@@ -24,7 +24,7 @@ module.exports.checkBatchim = word => {
 
     if (uni < 44032 || uni > 55203) return null;
 
-    return (uni - 44032) % 28 != 0;
+    return (uni - 44032) % 28 !== 0;
 }
 
 module.exports.getYoilString = num => {
@@ -81,7 +81,7 @@ module.exports.parseYouTubeLink = link => {
 module.exports.increaseBrightness = (hex, percent) => {
     hex = hex.replace(/^\s*#|\s*$/g, '');
 
-    if(hex.length == 3) {
+    if(hex.length === 3) {
         hex = hex.replace(/(.)/g, '$1$1');
     }
 

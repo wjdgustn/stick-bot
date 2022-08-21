@@ -1,6 +1,17 @@
-const { Client , Intents , Team } = require('discord.js');
+const {
+    Client,
+    Team,
+    GatewayIntentBits
+} = require('discord.js');
 const fs = require('fs');
-const Dokdo = require('dokdo');
+const {
+    Jejudo,
+    SummaryCommand,
+    EvaluateCommand,
+    ShellCommand,
+    DocsCommand
+} = require('jejudo');
+const awaitModalSubmit = require('await-modal-submit');
 
 const setting = require('./setting.json');
 const utils = require('./utils');
@@ -8,15 +19,11 @@ const Stick = require('./schemas/stick');
 
 const client = new Client({
     intents: [
-        Intents.FLAGS.GUILDS,
-        Intents.FLAGS.GUILD_MESSAGES
-    ],
-    partials: [
-        'GUILD_MEMBER',
-        'CHANNEL'
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages
     ]
 });
-let DokdoHandler;
+let JejudoHandler;
 
 const StickMessageHandler = require('./handler/StickMessageHandler');
 
@@ -36,6 +43,8 @@ const ServerCache = {
 }
 module.exports.Server = ServerCache;
 
+awaitModalSubmit(client);
+
 const connect = require('./schemas');
 connect();
 
@@ -43,13 +52,12 @@ let commandHandler = {};
 let commands = [];
 let privateCommands = [];
 let allCommands = [];
-let permissions = {};
 
 const debug = process.argv[2] === '--debug';
-// if(debug && !process.argv[3]) {
-//     console.error('Debug guild missing');
-//     process.exit(1);
-// }
+if(debug && !process.argv[3]) {
+    console.error('Debug guild missing');
+    process.exit(1);
+}
 
 const loadOwners = async () => {
     application = await client.application.fetch();
@@ -60,15 +68,21 @@ const loadOwners = async () => {
     ownerID.push(...setting.OWNERS);
 }
 
-const loadDokdo = () => {
-    DokdoHandler = new Dokdo(client, {
-        aliases: [ 'dokdo', 'dok' ],
-        prefix: '?',
+const loadJejudo = () => {
+    JejudoHandler = new Jejudo(client, {
+        command: 'j',
+        textCommand: [
+            'jeju',
+            'jejudo',
+            'dok',
+            'dokdo'
+        ],
+        prefix: setting.JEJUDO_PREFIX,
         owners: ownerID,
+        registerDefaultCommands: false,
         secrets: [
             setting.MONGODB_HOST,
             setting.MONGODB_PORT,
-            setting.MONGODB_HOST,
             setting.MONGODB_USER,
             setting.MONGODB_PASSWORD
         ],
@@ -79,6 +93,17 @@ const loadDokdo = () => {
             main: module.exports
         }
     });
+
+    const editedEvaluateCommand = new EvaluateCommand(JejudoHandler);
+    editedEvaluateCommand.data.name = 'js';
+
+    const editedShellCommand = new ShellCommand(JejudoHandler);
+    editedShellCommand.data.name = 'sh';
+
+    JejudoHandler.registerCommand(new SummaryCommand(JejudoHandler));
+    JejudoHandler.registerCommand(editedEvaluateCommand);
+    JejudoHandler.registerCommand(editedShellCommand);
+    JejudoHandler.registerCommand(new DocsCommand(JejudoHandler));
 }
 
 const loadCommands = () => {
@@ -86,16 +111,12 @@ const loadCommands = () => {
     commands = [];
     privateCommands = [];
     allCommands = [];
-    permissions = {};
     fs.readdirSync('./commands').forEach(c => {
         const file = require.resolve(`./commands/${c}`);
         delete require.cache[file];
         const module = require(`./commands/${c}`);
         commandHandler[module.info.name] = module.handler;
-        if(module.private) {
-            privateCommands.push(module.info);
-            permissions[module.info.name] = module.permissions;
-        }
+        if(module.private) privateCommands.push(module.info);
         else commands.push(module.info);
 
         allCommands.push(module.info);
@@ -107,31 +128,17 @@ const registerCommands = async () => {
         console.log('registering debug guild command...');
         await client.guilds.cache.get(process.argv[3]).commands.set(allCommands);
         console.log('registered debug guild command. registering debug guild command permission...');
-        // for(let c of guildCommandInfo) {
-        //     if(permissions[c[1].name] != null) await c[1].permissions.set({
-        //         permissions: permissions[c[1].name]
-        //     });
-        // }
         console.log('registered debug guild command permission.');
     }
     else {
         console.log('registering global command...');
         await client.application.commands.set(commands);
         console.log('registered global command.');
-
-        // const guildCommandInfo = await client.guilds.cache.get(process.argv[3]).commands.set(privateCommands);
-        // console.log('registered guild command. registering guild command permission...');
-        // for (let c of guildCommandInfo) {
-        //     if (permissions[c[1].name] != null) await c[1].permissions.set({
-        //         permissions: permissions[c[1].name]
-        //     });
-        // }
-        // console.log('registered guild command permission.');
     }
 }
 
 module.exports.loadOwners = loadOwners;
-module.exports.loadDokdo = loadDokdo;
+module.exports.loadDokdo = loadJejudo;
 module.exports.loadCommands = loadCommands;
 module.exports.registerCommands = registerCommands;
 
@@ -139,22 +146,10 @@ client.once('ready', async () => {
     console.log(`${client.user.tag}으로 로그인하였습니다.`);
 
     await loadOwners();
-    loadDokdo();
+    loadJejudo();
     loadCommands();
     registerCommands();
 
-
-
-client.on('interactionCreate', async interaction => {
-    if(interaction.isCommand() || interaction.isContextMenu()) {
-        if(!interaction.commandName) return;
-
-        if(!interaction.guild) return interaction.reply('server only');
-
-        if(commandHandler[interaction.commandName] != null) commandHandler[interaction.commandName](interaction);
-    }
-});
-    
     let activityIndex = 0;
     setInterval(async () => {
         await client.user.setActivity(setting.ACTIVITIES[activityIndex]
@@ -165,12 +160,24 @@ client.on('interactionCreate', async interaction => {
     }, setting.ACTIVITY_CHANGE_INTERVAL);
 });
 
+client.on('interactionCreate', async interaction => {
+    if(JejudoHandler) JejudoHandler.handleInteraction(interaction);
+
+    if(interaction.isCommand()) {
+        if(!interaction.commandName) return;
+
+        if(!interaction.guild) return interaction.reply('server only');
+
+        if(commandHandler[interaction.commandName] != null) commandHandler[interaction.commandName](interaction);
+    }
+});
+
 client.on('messageCreate', message => {
     if(message.author.id === client.user.id) return;
 
     StickMessageHandler(message);
 
-    DokdoHandler.run(message);
+    JejudoHandler.handleMessage(message);
 });
 
 client.on('channelDelete', async channel => {

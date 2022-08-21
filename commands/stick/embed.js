@@ -1,6 +1,12 @@
-const { MessageActionRow , MessageButton , MessageSelectMenu , Util } = require('discord.js');
-
-const utils = require('../../utils');
+const {
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    SelectMenuBuilder,
+    ModalBuilder,
+    TextInputBuilder,
+    TextInputStyle
+} = require('discord.js');
 
 const Stick = require('../../schemas/stick');
 
@@ -58,23 +64,23 @@ module.exports = async interaction => {
         content: '아래는 임베드 미리보기입니다. 셀렉터에서 수정할 항목을 선택하여 임베드를 수정하고, 적용하려면 완료를 눌러주세요.\nBelow is an embedded preview. Select the item to modify in the selector to modify the embed, and press Done to apply it.',
         embeds: [embed],
         components: [
-            new MessageActionRow()
+            new ActionRowBuilder()
                 .addComponents(
-                    new MessageSelectMenu()
+                    new SelectMenuBuilder()
                         .setCustomId('select')
                         .setPlaceholder('수정할 항목을 선택하세요. / Please select the item you want to modify.')
                         .addOptions(embedOptions)
                 ),
-            new MessageActionRow()
+            new ActionRowBuilder()
                 .addComponents(
-                    new MessageButton()
+                    new ButtonBuilder()
                         .setCustomId('apply')
                         .setLabel('완료 / Done')
-                        .setStyle('SUCCESS'),
-                    new MessageButton()
+                        .setStyle(ButtonStyle.Success),
+                    new ButtonBuilder()
                         .setCustomId('cancel')
                         .setLabel('취소 / Cancel')
-                        .setStyle('DANGER')
+                        .setStyle(ButtonStyle.Danger)
                 )
         ]
     });
@@ -83,7 +89,7 @@ module.exports = async interaction => {
     let applied = false;
     const collector = msg.createMessageComponentCollector({
         filter: i => i.user.id === interaction.user.id,
-        time: 180000
+        time: 1000 * 60 * 20
     });
 
     collector.on('collect', async i => {
@@ -105,26 +111,34 @@ module.exports = async interaction => {
         const fieldName = i.values[0];
 
         const fieldLabel = embedOptions.find(a => a.value === fieldName).label.split('/');
-        const msg = await i.reply({
-            fetchReply: true,
-            content: `${fieldLabel[0].trim()}${utils.checkBatchim(fieldLabel[0].trim()) ? '을' : '를'} 입력해주세요.\nInput ${(fieldLabel[1] || fieldLabel[0]).trim()}.${embed[fieldName] ? `\n\n현재 값(Current Value)\n\`\`\`\n${Util.escapeCodeBlock(embed[fieldName].text || embed[fieldName].url || embed[fieldName]).substring(0, 1024)}\`\`\`` : ''}`,
-        });
 
-        let response = await interaction.channel.awaitMessages({
-            filter: m => m.author.id === interaction.user.id && m.content,
-            time: 120000,
-            max: 1
-        });
-        doingEdit = false;
-        if(!response.first()) {
-            await msg.delete();
+        let response;
+        try {
+            response = await i.awaitModalSubmit(
+                new ModalBuilder()
+                    .setTitle('값 변경 / Value Change')
+                    .addComponents([
+                        new ActionRowBuilder()
+                            .addComponents([
+                                new TextInputBuilder()
+                                    .setCustomId('input')
+                                    .setLabel(`${fieldLabel[0].trim()} / ${(fieldLabel[1] || fieldLabel[0]).trim()}`)
+                                    .setPlaceholder('변경할 값을 입력하세요. / Input the value you want to change.')
+                                    .setStyle(fieldName === 'description' ? TextInputStyle.Paragraph : TextInputStyle.Short)
+                                    .setValue(embed[fieldName]?.text || embed[fieldName]?.url || embed[fieldName]?.toString() || '')
+                            ])
+                    ])
+            , 1000 * 60 * 15);
+        } catch(e) {
+            console.log(e);
             return interaction.followUp({
                 content: '시간이 초과되었습니다.\nTime out.',
                 ephemeral: true
             });
         }
-        const responseMsg = response.first();
-        response = response.first().content;
+
+        doingEdit = false;
+        const responseValue = response.fields.getTextInputValue('input');
 
         const valueBackup = embed[fieldName];
 
@@ -132,33 +146,30 @@ module.exports = async interaction => {
             'image',
             'thumbnail'
         ].includes(fieldName)) embed[fieldName] = {
-            url: response
+            url: responseValue
         };
         else if(fieldName === 'footer') embed[fieldName] = {
-            text: response
+            text: responseValue
         };
-        else embed[fieldName] = response;
+        else if(fieldName === 'color') embed[fieldName] = parseInt(`0x${responseValue.replace('#', '')}`, 16);
+        else embed[fieldName] = responseValue;
 
         try {
-            await interaction.editReply({
+            await response.update({
                 embeds: [embed]
             });
         } catch(e) {
-            embed[fieldName] = valueBackup;
+            if(!valueBackup) delete embed[fieldName];
+            else embed[fieldName] = valueBackup;
 
+            await interaction.editReply({
+                embeds: [embed]
+            });
             await interaction.followUp({
                 content: '입력값이 잘못되었습니다!\nWrong input!',
                 ephemeral: true
             });
-            await interaction.editReply({
-                embeds: [embed]
-            });
         }
-
-        await msg.delete();
-        try {
-            await responseMsg.delete();
-        } catch(e) {}
     });
 
     collector.on('end', async () => {
@@ -170,7 +181,7 @@ module.exports = async interaction => {
         //     components: msg.components
         // });
 
-        await msg.delete();
+        await interaction.deleteReply();
 
         if(!applied) return interaction.followUp({
             content: '고정 메시지 설정이 취소되었습니다.\nStick message setting cancelled.',

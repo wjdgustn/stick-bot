@@ -18,9 +18,10 @@
   },
   "homepage": "https://github.com/wjdgustn/stick-bot#readme",
   "dependencies": {
-    "discord.js": "^13.8.0",
-    "dokdo": "^0.5.1",
-    "mongoose": "^6.0.3"
+    "await-modal-submit": "^1.0.3",
+    "discord.js": "^14.2.0",
+    "jejudo": "^0.1.2",
+    "mongoose": "^6.5.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"

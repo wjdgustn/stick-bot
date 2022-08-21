@@ -1,4 +1,4 @@
-const permissions = require("../permissions");
+const { ApplicationCommandOptionType: Options } = require('discord.js');
 
 module.exports = {
     info: {
@@ -8,7 +8,7 @@ module.exports = {
             {
                 name: 'count',
                 description: '청소할 메시지의 갯수입니다.',
-                type: 'NUMBER',
+                type: Options.Integer,
                 required: true
             }
         ]
@@ -19,7 +19,7 @@ module.exports = {
             ephemeral: true
         });
 
-        const count = interaction.options.getNumber('count');
+        const count = interaction.options.getInteger('count');
 
         if(count < 1) return interaction.reply({
             content: '청소할 메시지의 수는 1보다 커야 합니다.',
