@@ -29,8 +29,12 @@ module.exports = async message => {
                 msg = stick.message;
                 break;
             case 'embed':
-                if(stick.newEmbed) msg = {
-                    embeds: [stick.embed]
+                if(stick.newEmbed) {
+                    if(typeof stick.embed.color === 'string')
+                        stick.embed.color = parseInt(`0x${stick.embed.color.replace('#', '')}`, 16);
+                    msg = {
+                        embeds: [stick.embed]
+                    }
                 }
                 else msg = {
                     embeds: [
