@@ -177,7 +177,7 @@ client.on('messageCreate', message => {
 
     StickMessageHandler(message);
 
-    JejudoHandler.handleMessage(message);
+    if(JejudoHandler) JejudoHandler.handleMessage(message);
 });
 
 client.on('channelDelete', async channel => {
