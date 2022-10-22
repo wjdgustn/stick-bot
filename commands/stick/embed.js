@@ -59,6 +59,9 @@ module.exports = async interaction => {
         }
     ];
 
+    if(typeof embed.color === 'string')
+        embed.color = parseInt(`0x${embed.color.replace('#', '')}`, 16);
+
     const msg = await interaction.reply({
         fetchReply: true,
         content: '아래는 임베드 미리보기입니다. 셀렉터에서 수정할 항목을 선택하여 임베드를 수정하고, 적용하려면 완료를 눌러주세요.\nBelow is an embedded preview. Select the item to modify in the selector to modify the embed, and press Done to apply it.',
