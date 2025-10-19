@@ -1,0 +1,8 @@
+services:
+  app:
+    build:
+      context: .
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    env_file:
+      - .env

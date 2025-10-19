@@ -12,8 +12,8 @@ const {
     DocsCommand
 } = require('jejudo');
 const awaitModalSubmit = require('await-modal-submit');
+const mongoose = require('mongoose');
 
-const setting = require('./setting.json');
 const utils = require('./utils');
 const Stick = require('./schemas/stick');
 
@@ -65,7 +65,7 @@ const loadOwners = async () => {
     ownerID = owners.map(a => a.id);
     teamOwner = application.owner instanceof Team ? application.owner.ownerId : application.owner.id;
 
-    ownerID.push(...setting.OWNERS);
+    if(process.env.OWNERS) ownerID.push(...process.env.OWNERS.split(',').map(a => a.trim()).filter(a => a));
 }
 
 const loadJejudo = () => {
@@ -77,18 +77,17 @@ const loadJejudo = () => {
             'dok',
             'dokdo'
         ],
-        prefix: setting.JEJUDO_PREFIX,
+        prefix: process.env.JEJUDO_PREFIX ?? `;`,
         owners: ownerID,
         registerDefaultCommands: false,
         secrets: [
-            setting.MONGODB_HOST,
-            setting.MONGODB_PORT,
-            setting.MONGODB_USER,
-            setting.MONGODB_PASSWORD
+            process.env.MONGODB_HOST,
+            process.env.MONGODB_PORT,
+            process.env.MONGODB_USER,
+            process.env.MONGODB_PASSWORD
         ],
         globalVariable: {
-            Stick,
-            setting,
+            ...mongoose.models,
             utils,
             main: module.exports
         }
@@ -151,13 +150,14 @@ client.once('ready', async () => {
     registerCommands();
 
     let activityIndex = 0;
-    setInterval(async () => {
-        await client.user.setActivity(setting.ACTIVITIES[activityIndex]
+    const activities = process.env.ACTIVITIES?.split(';').map(a => a.trim()).filter(a => a) ?? [];
+    if(activities.length) setInterval(async () => {
+        await client.user.setActivity(activities[activityIndex]
             .replace('{servercount}', client.guilds.cache.size.toString())
         );
         activityIndex++;
-        if(activityIndex >= setting.ACTIVITIES.length) activityIndex = 0;
-    }, setting.ACTIVITY_CHANGE_INTERVAL);
+        if(activityIndex >= activities.length) activityIndex = 0;
+    }, parseInt(process.env.ACTIVITY_CHANGE_INTERVAL) ?? 10000);
 });
 
 client.on('interactionCreate', async interaction => {
@@ -186,4 +186,13 @@ client.on('channelDelete', async channel => {
     });
 });
 
-client.login(setting.TOKEN);
+client.login(process.env.TOKEN);
+
+const exitHandler = async () => {
+    console.log('exiting...');
+    client.destroy();
+    await mongoose.disconnect();
+    process.exit(0);
+}
+process.on('SIGINT', exitHandler);
+process.on('SIGTERM', exitHandler);
