@@ -1,7 +1,8 @@
 const {
     Client,
     Team,
-    GatewayIntentBits
+    GatewayIntentBits,
+    Options
 } = require('discord.js');
 const fs = require('fs');
 const {
@@ -21,7 +22,13 @@ const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages
-    ]
+    ],
+    makeCache: Options.cacheWithLimits({
+        ...Options.DefaultMakeCacheSettings,
+        GuildMessageManager: {
+            maxSize: 100
+        }
+    })
 });
 let JejudoHandler;
 
