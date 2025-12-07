@@ -27,7 +27,8 @@ const client = new Client({
         ...Options.DefaultMakeCacheSettings,
         GuildMessageManager: {
             maxSize: 100
-        }
+        },
+        GuildMemberManager: 0
     })
 });
 let JejudoHandler;
