@@ -29,7 +29,8 @@ const client = new Client({
             maxSize: 100
         },
         GuildMemberManager: 0
-    })
+    }),
+    shards: 'auto'
 });
 let JejudoHandler;
 
