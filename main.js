@@ -26,7 +26,8 @@ const client = new Client({
     makeCache: Options.cacheWithLimits({
         ...Options.DefaultMakeCacheSettings,
         GuildMessageManager: 0,
-        GuildMemberManager: 0
+        GuildMemberManager: 0,
+        UserManager: 0
     }),
     shards: 'auto'
 });
