@@ -30,7 +30,16 @@ const client = new Client({
         UserManager: 0,
         GuildEmojiManager: 0,
         GuildStickerManager: 0,
-        VoiceStateManager: 0
+        VoiceStateManager: 0,
+        GuildInviteManager: 0,
+        MessageManager: 0,
+        DMMessageManager: 0,
+        BaseGuildEmojiManager: 0,
+        GuildBanManager: 0,
+        GuildScheduledEventManager: 0,
+        PresenceManager: 0,
+        ReactionUserManager: 0,
+        ThreadMemberManager: 0
     })
 });
 let JejudoHandler;
