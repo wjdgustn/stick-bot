@@ -168,15 +168,15 @@ client.once('clientReady', async () => {
     loadCommands();
     registerCommands();
 
-    let activityIndex = 0;
-    const activities = process.env.ACTIVITIES?.split(';').map(a => a.trim()).filter(a => a) ?? [];
-    if(activities.length) setInterval(async () => {
-        await client.user.setActivity(activities[activityIndex]
-            .replace('{servercount}', client.guilds.cache.size.toString())
-        );
-        activityIndex++;
-        if(activityIndex >= activities.length) activityIndex = 0;
-    }, parseInt(process.env.ACTIVITY_CHANGE_INTERVAL) ?? 10000);
+    // let activityIndex = 0;
+    // const activities = process.env.ACTIVITIES?.split(';').map(a => a.trim()).filter(a => a) ?? [];
+    // if(activities.length) setInterval(async () => {
+    //     await client.user.setActivity(activities[activityIndex]
+    //         .replace('{servercount}', client.guilds.cache.size.toString())
+    //     );
+    //     activityIndex++;
+    //     if(activityIndex >= activities.length) activityIndex = 0;
+    // }, parseInt(process.env.ACTIVITY_CHANGE_INTERVAL) ?? 10000);
 });
 
 client.on('interactionCreate', async interaction => {
