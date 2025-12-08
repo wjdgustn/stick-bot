@@ -1,4 +1,4 @@
-const main = require('../../main');
+const main = require('../../bot');
 const utils = require('../../utils');
 
 module.exports = async interaction => {

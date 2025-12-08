@@ -1,7 +1,7 @@
 const { ApplicationCommandOptionType: Options } = require('discord.js');
 const fs = require('fs');
 
-const main = require('../../main');
+const main = require('../../bot');
 
 module.exports = {
     private: true,
