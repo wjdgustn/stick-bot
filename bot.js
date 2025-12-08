@@ -31,8 +31,7 @@ const client = new Client({
         GuildEmojiManager: 0,
         GuildStickerManager: 0,
         VoiceStateManager: 0
-    }),
-    shards: 'auto'
+    })
 });
 let JejudoHandler;
 
