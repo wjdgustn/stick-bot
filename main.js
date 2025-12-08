@@ -27,7 +27,10 @@ const client = new Client({
         ...Options.DefaultMakeCacheSettings,
         GuildMessageManager: 0,
         GuildMemberManager: 0,
-        UserManager: 0
+        UserManager: 0,
+        GuildEmojiManager: 0,
+        GuildStickerManager: 0,
+        VoiceStateManager: 0
     }),
     shards: 'auto'
 });
